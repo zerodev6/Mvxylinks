@@ -1,11 +1,10 @@
 {
   "functions": {
-    "api/*.py": {}
+    "api/index.py": {}
   },
   "rewrites": [
     { "source": "/", "destination": "/api/index" },
-    { "source": "/api/st", "destination": "/api/st" },
-    { "source": "/api/index", "destination": "/api/index" },
+    { "source": "/api/st", "destination": "/api/index" },
     { "source": "/:code", "destination": "/api/index?code=:code" }
   ]
 }
