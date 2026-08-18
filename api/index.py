@@ -14,14 +14,16 @@ def get_db():
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        # Parse code from query (rewritten from /:code)
+        # Parse code from query string (for /:code rewrite)
         query = parse_qs(urlparse(self.path).query)
         code = query.get("code", [None])[0]
 
+        # If no code is provided, show a simple landing page
         if not code:
-            self.send_error(400, "Missing code")
+            self.show_landing_page()
             return
 
+        # Otherwise, look up the code in MongoDB
         db = get_db()
         collection = db["links"]
         doc = collection.find_one({"code": code})
@@ -30,11 +32,10 @@ class handler(BaseHTTPRequestHandler):
             self.send_error(404, "Short link not found")
             return
 
-        # Increment click count (link used)
+        # Increment click count
         collection.update_one({"code": code}, {"$inc": {"clicks": 1}})
 
         destination = doc["destination"]
-        # Safely embed destination in JavaScript
         destination_json = json.dumps(destination)
 
         html = f"""<!DOCTYPE html>
@@ -140,6 +141,60 @@ class handler(BaseHTTPRequestHandler):
 </body>
 </html>"""
 
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+        self.wfile.write(html.encode("utf-8"))
+
+    def show_landing_page(self):
+        """Display a simple welcome page when no code is provided."""
+        html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVXY Mediator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #302b63;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #555;
+        }
+        a {
+            color: #302b63;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>MVXY Mediator</h1>
+        <p>This is a URL shortener with a countdown mediator.</p>
+        <p>Use the API at <code>/api/st</code> to create short links.</p>
+    </div>
+</body>
+</html>"""
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()
