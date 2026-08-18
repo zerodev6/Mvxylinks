@@ -1,17 +1,7 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/st",
-      "dest": "/api/st.py"
-    },
-    {
-      "src": "/(?<code`>[a-zA-Z0-9]+)",
-      "dest": "/api/index.py?code=$code"
-    },
-    {
-      "src": "/",
-      "dest": "/api/index.py"
-    }
+  "rewrites": [
+    { "source": "/api/st", "destination": "/api/st" },
+    { "source": "/api/resolve", "destination": "/api/resolve" },
+    { "source": "/:code", "destination": "/api/resolve?code=:code" }
   ]
 }
