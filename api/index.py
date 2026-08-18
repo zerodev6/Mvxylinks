@@ -14,7 +14,7 @@ app = FastAPI(title="MVXY Mediator")
 
 MONGODB_URI = os.getenv("MONGODB_URI")
 MONGODB_DATABASE = os.getenv("MONGODB_DATABASE", "mvxymediator")
-API_KEY = "mvxyyy"
+API_KEY = os.getenv("API_KEY", "mvxyyy")
 
 mongo_client = None
 
@@ -103,7 +103,7 @@ async def mediator_page(code: str):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MVXY Mediator</title>
+        <title>Mediator Page | Please Wait.</title>
         <style>
             body {{
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -114,20 +114,57 @@ async def mediator_page(code: str):
                 align-items: center;
                 min-height: 100vh;
                 margin: 0;
+                padding: 20px;
             }}
             .card {{
                 background: #1e293b;
                 border: 1px solid #334155;
-                padding: 2.5rem;
+                padding: 2rem;
                 border-radius: 12px;
                 box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+                max-width: 500px;
+                width: 100%;
                 text-align: center;
-                max-width: 420px;
-                width: 90%;
             }}
-            h1 {{ font-size: 1.5rem; margin-bottom: 0.5rem; color: #38bdf8; }}
-            .subtitle {{ font-size: 1rem; color: #94a3b8; margin-bottom: 1.5rem; }}
-            .timer {{ font-size: 3rem; font-weight: bold; color: #f59e0b; margin: 1rem 0; }}
+            .header {{
+                font-size: 0.9rem;
+                color: #94a3b8;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 0.5rem;
+            }}
+            .main-title {{
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #38bdf8;
+                margin-bottom: 0.2rem;
+            }}
+            .subtitle {{
+                color: #94a3b8;
+                margin-bottom: 1.5rem;
+            }}
+            .countdown {{
+                font-size: 4rem;
+                font-weight: bold;
+                color: #f59e0b;
+                margin: 0.5rem 0;
+            }}
+            .wait-text {{
+                font-size: 1rem;
+                color: #94a3b8;
+                margin-bottom: 1rem;
+            }}
+            .download-servers {{
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #f8fafc;
+                margin-top: 1rem;
+            }}
+            .fastest-text {{
+                font-size: 0.9rem;
+                color: #94a3b8;
+                margin-bottom: 1.5rem;
+            }}
             .btn {{
                 background-color: #3b82f6;
                 color: #ffffff;
@@ -140,16 +177,62 @@ async def mediator_page(code: str):
                 transition: background-color 0.2s, opacity 0.2s;
                 width: 100%;
             }}
-            .btn:disabled {{ background-color: #475569; color: #94a3b8; cursor: not-allowed; opacity: 0.6; }}
-            .btn:hover:not(:disabled) {{ background-color: #2563eb; }}
+            .btn:disabled {{
+                background-color: #475569;
+                color: #94a3b8;
+                cursor: not-allowed;
+                opacity: 0.6;
+            }}
+            .btn:hover:not(:disabled) {{
+                background-color: #2563eb;
+            }}
+            .footer {{
+                margin-top: 2rem;
+                border-top: 1px solid #334155;
+                padding-top: 1.5rem;
+            }}
+            .footer-heading {{
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: #f8fafc;
+            }}
+            .footer-text {{
+                font-size: 0.9rem;
+                color: #94a3b8;
+                margin: 0.3rem 0;
+            }}
+            .footer-request {{
+                font-weight: bold;
+                color: #f8fafc;
+                margin-top: 1rem;
+            }}
+            .footer-request-text {{
+                font-size: 0.9rem;
+                color: #94a3b8;
+            }}
+            .copyright {{
+                font-size: 0.8rem;
+                color: #64748b;
+                margin-top: 1rem;
+            }}
         </style>
     </head>
     <body>
         <div class="card">
-            <h1>MVXY MEDIATOR</h1>
-            <div class="subtitle">Please wait...</div>
-            <div class="timer" id="countdown">10</div>
-            <button id="continueBtn" class="btn" disabled>Continue</button>
+            <div class="header">Mediator Page | Please Wait.</div>
+            <div class="main-title">Links Page is Almost Ready 🚀</div>
+            <div class="countdown" id="countdown">10</div>
+            <div class="wait-text">PLEASE WAIT...</div>
+            <div class="download-servers">Download Servers</div>
+            <div class="fastest-text">HDHub4u Provide Fastest Download</div>
+            <button id="continueBtn" class="btn" disabled>Get Link</button>
+            <div class="footer">
+                <div class="footer-heading">Multiple Links</div>
+                <div class="footer-text">Fastest & Reliable Links are Available for Downloading.</div>
+                <div class="footer-request">Request</div>
+                <div class="footer-request-text">Users can request us for Updating Links by Contacting Via Telegram</div>
+                <div class="copyright">© 2024 mvxy.site, All Rights Reserved</div>
+            </div>
         </div>
         <script>
             let timeLeft = 10;
@@ -163,6 +246,7 @@ async def mediator_page(code: str):
                 if (timeLeft <= 0) {{
                     clearInterval(timer);
                     continueBtn.disabled = false;
+                    continueBtn.textContent = "Get Link";
                 }}
             }}, 1000);
 
