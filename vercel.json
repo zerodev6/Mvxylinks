@@ -1,4 +1,8 @@
 {
+  "builds": [
+    { "src": "api/st.py", "use": "@vercel/python" },
+    { "src": "api/resolve.py", "use": "@vercel/python" }
+  ],
   "rewrites": [
     { "source": "/api/st", "destination": "/api/st" },
     { "source": "/api/resolve", "destination": "/api/resolve" },
