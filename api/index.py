@@ -16,7 +16,7 @@ app = FastAPI(title="MVXY Mediator")
 # Retrieve Environment Variables
 MONGODB_URI = os.getenv("MONGODB_URI")
 MONGODB_DATABASE = os.getenv("MONGODB_DATABASE", "mvxymediator")
-API_KEY = os.getenv("API_KEY", "mvxyyy")
+API_KEY = "mvxyyy"
 
 # MongoDB Client Setup (Reused across serverless warm invocations)
 mongo_client = None
